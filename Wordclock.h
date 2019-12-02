@@ -13,12 +13,12 @@ public:
     static const int SIZE_Y = Y;
     static const int SIZE = SIZE_X * SIZE_Y;
 
-    LedMatrix()
+    TLedMatrix()
     {
         clear();
     }
 
-    LedMatrix(const LedMatrix<X,Y>& f_other)
+    TLedMatrix(const TLedMatrix<X,Y>& f_other)
     {
         for (int n=0; n<SIZE; ++n)
         {
@@ -53,12 +53,12 @@ public:
     {
         if ((idx >=0) && (idx < SIZE))
         {
-            return (m_ledMatrix[idx] > 0);
+            return (m_ledState[idx] > 0);
         }
         return false;
     }
 
-    LedMatrix<X,Y>& operator= (const LedMatrix<X,Y>& f_other)
+    TLedMatrix<X,Y>& operator= (const TLedMatrix<X,Y>& f_other)
     {
         for (int n=0; n<SIZE; ++n)
         {
@@ -67,7 +67,7 @@ public:
         return *this;
     }
 
-    LedMatrix<X,Y>& operator+= (const LedMatrix<X,Y>& f_other)
+    TLedMatrix<X,Y>& operator+= (const TLedMatrix<X,Y>& f_other)
     {
         for (int n=0; n<SIZE; ++n)
         {
@@ -88,7 +88,6 @@ public:
     typedef typename led_matrix_config_t::led_matrix_t led_matrix_t;
 
     Wordclock()
-    : m_ledMatrix()
     {
     }
 
@@ -115,17 +114,19 @@ protected:
 class LedMatrixConfig_DE_11x10
 {
 public:
-    typedef led_matrix_t<11,10> led_matrix_t;
+    typedef TLedMatrix<11,10> led_matrix_t;
 
     static void setTime(uint8_t hour, uint8_t minutes, led_matrix_t& matrix) 
     {
+        matrix.clear();
         matrix.setLeds(5,0,1,3,4,5); // es ist
         
         // set minutes and increment the hour if needed
         const uint8_t minutesBy5 = (minutes / 5) * 5;
+        bool fullHour = false;
         switch (minutesBy5)
         {
-            case 0 : matrix.setLeds(3,107,108,109); break;
+            case 0 : matrix.setLeds(3,107,108,109); fullHour=true; break;
             case 5 : matrix.setLeds(8,7,8,9,10,40,41,42,43); break;
             case 10: matrix.setLeds(8,11,12,13,14,40,41,42,43); break;
             case 15: matrix.setLeds(11,26,27,28,29,30,31,32,40,41,42,43); break;
@@ -143,7 +144,7 @@ public:
         switch (hour12)
         {
             case 0: matrix.setLeds(5,94,95,96,97,98); break;
-            case 1: matrix.setLeds(4,55,56,57,58); break;
+            case 1: fullHour ? matrix.setLeds(3,55,56,57) : matrix.setLeds(4,55,56,57,58); break;
             case 2: matrix.setLeds(4,62,63,64,65); break;
             case 3: matrix.setLeds(3,66,67,68); break;
             case 4: matrix.setLeds(3,73,74,75,76); break;
