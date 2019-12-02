@@ -146,12 +146,12 @@ public:
             case 0: matrix.setLeds(5,94,95,96,97,98); break;
             case 1: fullHour ? matrix.setLeds(3,55,56,57) : matrix.setLeds(4,55,56,57,58); break;
             case 2: matrix.setLeds(4,62,63,64,65); break;
-            case 3: matrix.setLeds(3,66,67,68); break;
-            case 4: matrix.setLeds(3,73,74,75,76); break;
+            case 3: matrix.setLeds(4,66,67,68,69); break;
+            case 4: matrix.setLeds(4,73,74,75,76); break;
             case 5: matrix.setLeds(4,51,52,53,54); break;
-            case 6: matrix.setLeds(5,77,78,79,80.81); break;
+            case 6: matrix.setLeds(5,77,78,79,80,81); break;
             case 7: matrix.setLeds(6,88,89,90,91,92,93); break;
-            case 8: matrix.setLeds(4,95,96,97,98); break;
+            case 8: matrix.setLeds(4,84,85,86,87); break;
             case 9: matrix.setLeds(4,102,103,104,105); break;
             case 10: matrix.setLeds(4,99,100,101,102); break;
             case 11: matrix.setLeds(3,49,50,51); break;
