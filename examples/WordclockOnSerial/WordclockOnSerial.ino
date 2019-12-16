@@ -63,7 +63,7 @@ void loop()
 {
     for (uint8_t h=0; h<23; ++h)
     {
-        for (uint8_t m=0; m<60; ++m)
+        for (uint8_t m=0; m<60; m+=5)
         {
             Serial.print("Current Hours ");
             Serial.print(h);
@@ -74,7 +74,7 @@ void loop()
             matrixEmu.clear();
             wordclock.setTime(h, m, matrixEmu, MatrixEmulator::StdColor);
             matrixEmu.print();
-            delay(1000);
+            delay(100);
         }
     }
 
