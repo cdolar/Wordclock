@@ -31,6 +31,7 @@ namespace wordclock
     Configuration_v1()
     : version(1)
     , structSize(sizeof(Configuration_v1))
+    , brightnessMode(timeBrightness)
     , maxBrightness(255)
     , minBrightness(65)
     , brightnessStartHour(8)
