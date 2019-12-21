@@ -23,6 +23,7 @@ namespace wordclock
         void apiSendError(String message);
 
         void apiGetStatus();
+        void apiGetDateTime();
         void apiSetDateTime();
         void apiSetBrightness();
 
