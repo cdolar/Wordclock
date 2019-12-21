@@ -1,4 +1,5 @@
 #include "RealTimeClock.h"
+#include "Wire.h"
 
 namespace wordclock
 {
@@ -11,13 +12,40 @@ namespace wordclock
     bool RealTimeClock::init()
     {
         Serial.println("Initializing RealTimeClock");
+        Wire.begin();
+        Wire.status();
         m_isInitialized = m_rtc.begin();
         if (m_isInitialized)
         {
             DateTime now = m_rtc.now();
             m_hour = now.hour();
             m_min = now.minute();
+            Serial.print(now.year(), DEC);
+            Serial.print('/');
+            Serial.print(now.month(), DEC);
+            Serial.print('/');
+            Serial.print(now.day(), DEC);
+            Serial.print(" ");
+            Serial.print(now.hour(), DEC);
+            Serial.print(':');
+            Serial.print(now.minute(), DEC);
+            Serial.println();
+
         }
+    }
+
+    void RealTimeClock::toSerial(DateTime time ) const
+    {
+            Serial.print(time.year(), DEC);
+            Serial.print('/');
+            Serial.print(time.month(), DEC);
+            Serial.print('/');
+            Serial.print(time.day(), DEC);
+            Serial.print(" ");
+            Serial.print(time.hour(), DEC);
+            Serial.print(':');
+            Serial.print(time.minute(), DEC);
+            Serial.println();
     }
 
     bool RealTimeClock::hasNewTime()
@@ -95,7 +123,7 @@ namespace wordclock
                 (day    > 0)        &&
                 (day    < 32))
             {
-                m_rtc.adjust(DateTime(year, month, day, hour, minute));
+                m_rtc.adjust(DateTime(year, month, day, hour, minute ));
                 Serial.println("RTC adjusted");
             }
         }

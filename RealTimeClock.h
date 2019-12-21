@@ -23,6 +23,8 @@ namespace wordclock
 
         DateTime now();
 
+        void toSerial(DateTime time) const;
+
     private:
         RTC_DS3231  m_rtc;
         uint16_t    m_min;
