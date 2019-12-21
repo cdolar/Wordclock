@@ -211,7 +211,7 @@ public:
     static void setTime(uint8_t hour, uint8_t minutes, led_matrix_t& matrix) 
     {
         matrix.clear();
-        matrix.setLeds(5,102, 103, 104, 105); // es ist
+        matrix.setLeds(5,102,103,105,106,107); // es ist
         
         // set minutes and increment the hour if needed
         const uint8_t validMinutes = minutes % 60;
