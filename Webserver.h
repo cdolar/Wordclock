@@ -26,6 +26,8 @@ namespace wordclock
         void apiGetDateTime();
         void apiSetDateTime();
         void apiSetBrightness();
+        void apiSetHostname();
+        void apiResetConfig();
 
         typedef StaticJsonDocument<10000> jsonDoc_t;
 

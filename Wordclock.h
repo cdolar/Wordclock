@@ -81,6 +81,8 @@ protected:
     uint8_t m_ledState[SIZE];
 };
 
+//---------------------------------------------------------------------------------------------------------------------
+
 template <class LED_MATRIX_CONFIG>
 class Wordclock
 {
@@ -104,7 +106,7 @@ public:
         {
             if (m_ledMatrix.isLedActive(n))
             {
-                matrixCtrl.setLed(n, color);
+                matrixCtrl.SetPixelColor(n, color);
             }
         }
         // set the four corner minute LEDs
@@ -223,13 +225,13 @@ public:
             case 5 : matrix.setLeds(8,109,110,111,112,71,70,69,68); break; //fünf nach
             case 10: matrix.setLeds(8,100,99,98,97,71,70,69,68); break; // zehn nach
             case 15: matrix.setLeds(11,83,84,85,86,87,88,89,71,70,69,68); break; // viertel nach
-            case 20: matrix.setLeds(11,96,95,94,93,93,92,91,90,71,70,69,68); break; //zwanzig nach
+            case 20: matrix.setLeds(11,96,95,94,93,92,91,90,71,70,69,68); break; //zwanzig nach
             case 25: matrix.setLeds(11,109,110,111,112,78,77,76,57,58,59,60); hour++; break; // fünf vor halb
             case 30: matrix.setLeds(4,57,58,59,60); hour++; break; //halb
             case 35: matrix.setLeds(12,109,110,111,112,71,70,69,68,57,58,59,60); hour++; break; // fünf nach halb
             case 40: matrix.setLeds(10,96,95,94,93,92,91,90,78,77,76); hour++; break; // zwanzig vor
-            case 45: matrix.setLeds(10,83,4,85,86,87,88,89,78,77,76); hour++; break; // viertel vor
-            case 50: matrix.setLeds(7,100,99,98,97,97,78,77,76); hour++; break; // zehn vor
+            case 45: matrix.setLeds(10,83,84,85,86,87,88,89,78,77,76); hour++; break; // viertel vor
+            case 50: matrix.setLeds(7,100,99,98,97,78,77,76); hour++; break; // zehn vor
             case 55: matrix.setLeds(7,109,110,111,112,78,77,76); hour++; break; // fünf vor
         }
 
@@ -257,7 +259,7 @@ public:
             case 8: matrix.setLeds(4,27,26,25,24); break; // acht
             case 9: matrix.setLeds(4,8,7,6,5); break; // neun
             case 10: matrix.setLeds(4,11,10,9,8); break; // zehn
-            case 11: matrix.setLeds(3,61,62,63); break; // elf
+            case 11: matrix.setLeds(3,62,63,64); break; // elf
         }
     }
 };
@@ -285,12 +287,11 @@ public:
     MatrixEmulator()
     {
     }
-    typedef int color;
 
     static const int SIZE = LED_MATRIX_CONFIG::SIZE;
-    static const color StdColor = 0;
 
-    void setLed(int idx, color c)
+    template <class color_t>
+    void SetPixelColor(int idx, color_t c)
     {
         if ((idx >=0) && (idx < SIZE))
         {

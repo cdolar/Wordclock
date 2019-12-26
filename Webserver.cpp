@@ -13,6 +13,11 @@ namespace wordclock
             webserver.apiGetStatus();
         }
 
+        void getDateTime()
+        {
+            webserver.apiGetDateTime();
+        }
+
         void setDateTime()
         {
             webserver.apiSetDateTime();
@@ -21,6 +26,16 @@ namespace wordclock
         void setBrightness()
         {
             webserver.apiSetBrightness();
+        }
+
+        void setHostname()
+        {
+            webserver.apiSetHostname();
+        }
+
+        void resetConfig()
+        {
+            webserver.apiResetConfig();
         }
     }
 
@@ -51,8 +66,10 @@ namespace wordclock
 
             Serial.println("Setting up web api");
             m_server.on("/api/status", api::getStatus);
+            m_server.on("/api/getDateTime", api::getDateTime);
             m_server.on("/api/setDateTime", api::setDateTime);
             m_server.on("/api/setBrightness", api::setBrightness);
+            m_server.on("/api/resetConfig", api::resetConfig);
             m_server.begin();
 
             Serial.print("Setting up MDNS with hostname ");
@@ -101,7 +118,40 @@ namespace wordclock
     void Webserver::apiGetStatus()
     {
         m_jsonDoc.clear();
-        m_jsonDoc["status"] = String("OK");
+        m_jsonDoc["config"]["hostname"] = config.hostname;
+        m_jsonDoc["config"]["password"] = config.password;
+        switch (config.brightnessMode)
+        {
+            case fixedBrightness:
+                m_jsonDoc["config"]["brightnessMode"] = "fixed brightness";
+                break;
+            case timeBrightness:
+                m_jsonDoc["config"]["brightnessMode"] = "time-based brigthness";
+                break;
+        }
+        m_jsonDoc["config"]["maxBrightness"] = config.maxBrightness;
+        m_jsonDoc["config"]["minBrightness"] = config.minBrightness;
+        m_jsonDoc["config"]["brightnessStartHour"] = config.brightnessStartHour;
+        m_jsonDoc["config"]["brightnessEndHour"] = config.brightnessEndHour;
+        DateTime now = rtc.now();
+        m_jsonDoc["currentTime"]["hour"]    = String(now.hour());
+        m_jsonDoc["currentTime"]["minute"]  = String(now.minute());
+        m_jsonDoc["currentTime"]["day"]     = String(now.day());
+        m_jsonDoc["currentTime"]["month"]   = String(now.month());
+        m_jsonDoc["currentTime"]["year"]    = String(now.year());
+
+        apiSendJSON(200);
+    }
+
+    void Webserver::apiGetDateTime()
+    {
+        m_jsonDoc.clear();
+        DateTime now = rtc.now();
+        m_jsonDoc["hour"] = String(now.hour());
+        m_jsonDoc["minute"] = String(now.minute());
+        m_jsonDoc["day"] = String(now.day());
+        m_jsonDoc["month"] = String(now.month());
+        m_jsonDoc["year"] = String(now.year());
         apiSendJSON(200);
     }
 
@@ -179,6 +229,45 @@ namespace wordclock
         apiSendOK();  
     }
 
+
+    void Webserver::apiSetHostname()
+    {
+        if (m_server.hasArg("hostname"))
+        {
+            String hostname = m_server.arg("hostname");
+            if (hostname.length() < Configuration::MAX_HOSTNAME_LENGTH)
+            {
+                hostname.toCharArray(config.hostname, Configuration::MAX_HOSTNAME_LENGTH);
+            }
+            else 
+            {
+                apiSendError(String("given hostname is too long: ") + hostname);
+                return;
+            }
+        }
+        if (m_server.hasArg("password"))
+        {
+            String passwd = m_server.arg("password");
+            if (passwd.length() < Configuration::MAX_HOSTNAME_LENGTH)
+            {
+                passwd.toCharArray(config.password, Configuration::MAX_HOSTNAME_LENGTH);
+            }
+            else
+            {
+                apiSendError(String("Given password is too long: ") + passwd);
+                return;
+            }
+        }
+        saveConfiguration();
+        apiSendOK();  
+    }
+
+    void Webserver::apiResetConfig()
+    {
+        loadDefaultConfiguration();
+        saveConfiguration();
+        apiSendOK();
+    }
 
     Webserver webserver;
 }
